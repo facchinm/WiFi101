@@ -50,6 +50,12 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 						WiFi._submask = 0;
 						WiFi._gateway = 0;
 					}
+					// Close sockets to clean state
+					// Clients will need to reconnect once the physical link will be re-established
+					for (int i=0; i < TCP_SOCK_MAX; i++) {
+						if (WiFi._client[i])
+							WiFi._client[i]->stop();
+					}
 				}
 				// WiFi led OFF (rev A then rev B).
 				m2m_periph_gpio_set_val(M2M_PERIPH_GPIO15, 1);
